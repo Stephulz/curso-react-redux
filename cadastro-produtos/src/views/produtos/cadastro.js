@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { withRouter } from 'react-router'
 import ProdutoService from '../../app/produtoService'
 
 const estadoInicial = {
@@ -12,7 +13,7 @@ const estadoInicial = {
     errors: []
 }
 
-export default class CadastroProduto extends Component {
+class CadastroProduto extends Component {
     state = estadoInicial
 
     constructor() {
@@ -40,14 +41,23 @@ export default class CadastroProduto extends Component {
             this.setState({ sucesso: true })
         } catch (erro) {
             const errors = erro.errors
-            console.log(errors)
             this.setState({ errors: errors })
-            console.log(this.state)
         }
     }
 
     limpaCampos = () => {
         this.setState(estadoInicial)
+    }
+
+    componentDidMount() {
+        const sku = this.props.match.params.sku
+        if (sku) {
+            const resultado = this.service.obterProdutos().filter(produto => produto.sku === sku)
+            if (resultado.length === 1) {
+                const produtoEncontrado = resultado[0]
+                this.setState({ ...produtoEncontrado })
+            }
+        }
     }
 
     render() {
@@ -59,8 +69,8 @@ export default class CadastroProduto extends Component {
                 <div className="card-body">
 
                     {this.state.sucesso &&
-                        (<div class="alert alert-dismissible alert-success">
-                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        (<div className="alert alert-dismissible alert-success">
+                            <button type="button" className="close" data-dismiss="alert">&times;</button>
                             <strong>Bem feito!</strong> Cadastro realizado com sucesso.
                         </div>)
                     }
@@ -68,8 +78,8 @@ export default class CadastroProduto extends Component {
                     {this.state.errors.length > 0 &&
                         this.state.errors.map(msg => {
                             return (
-                                <div class="alert alert-dismissible alert-danger">
-                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                <div className="alert alert-dismissible alert-danger">
+                                    <button type="button" className="close" data-dismiss="alert">&times;</button>
                                     <strong>Erro!</strong> {msg}
                                 </div>
                             )
@@ -147,3 +157,5 @@ export default class CadastroProduto extends Component {
         )
     }
 }
+
+export default withRouter(CadastroProduto);
