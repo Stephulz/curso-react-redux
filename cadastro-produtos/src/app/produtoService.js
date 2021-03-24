@@ -1,5 +1,3 @@
-import React from 'react'
-
 const PRODUTOS = '_PRODUTOS'
 
 export function ErroValidacao(errors) {
@@ -28,22 +26,47 @@ export default class ProdutoService {
     }
 
     obterProdutos = () => {
-        const produtos = localStorage.getItem(PRODUTOS)
+        let produtos = localStorage.getItem(PRODUTOS)
+        if (!produtos) {
+            return []
+        }
         return JSON.parse(produtos)
     }
 
+    obterIndex = (sku) => {
+        let index = null;
+        this.obterProdutos().forEach((produto, i) => {
+            if (produto.sku === sku) {
+                index = i;
+            }
+        })
+        return index;
+    }
+
+    deletar = (sku) => {
+        const index = this.obterIndex(sku);
+        if (index !== null) {
+            const produtos = this.obterProdutos()
+            produtos.splice(index, 1);
+            localStorage.setItem(PRODUTOS, JSON.stringify(produtos))
+            return produtos;
+        }
+    }
+
     salvar = (produto) => {
-        this.validar(produto)
+        this.validar(produto);
 
-        let produtos = localStorage.getItem(PRODUTOS)
+        let produtos = this.obterProdutos();
 
-        if (!produtos) {
-            produtos = []
+        const index = this.obterIndex(produto.sku);
+
+        if (index === null) {
+            produtos.push(produto);
+            console.log("push", produto)
         } else {
-            produtos = JSON.parse(produtos)
+            produtos[index] = produto;
         }
 
-        produtos.push(produto);
         localStorage.setItem(PRODUTOS, JSON.stringify(produtos))
     }
 }
