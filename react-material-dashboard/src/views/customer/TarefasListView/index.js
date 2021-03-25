@@ -17,9 +17,9 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const CustomerListView = () => {
+const TarefasListView = () => {
   const classes = useStyles();
-  const [customers] = useState([]);
+  const [tarefas] = useState([]);
 
   return (
     <Page
@@ -29,11 +29,11 @@ const CustomerListView = () => {
       <Container maxWidth={false}>
         <Toolbar />
         <Box mt={3}>
-          <Results customers={customers} />
+          <Results tarefas={tarefas} />
         </Box>
       </Container>
     </Page>
   );
 };
 
-export default CustomerListView;
+export default TarefasListView;

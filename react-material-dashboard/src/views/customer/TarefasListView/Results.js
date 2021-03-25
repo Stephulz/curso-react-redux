@@ -1,23 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {
-  Avatar,
-  Box,
   Card,
-  Checkbox,
+  CardContent,
   Table,
   TableBody,
   TableCell,
   TableHead,
-  TablePagination,
   TableRow,
   Typography,
   makeStyles
 } from '@material-ui/core';
-import getInitials from 'src/utils/getInitials';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -26,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Results = ({ className, users, ...rest }) => {
+const Results = ({ className, tarefas, ...rest }) => {
   const classes = useStyles();
 
   return (
@@ -37,7 +32,19 @@ const Results = ({ className, users, ...rest }) => {
       <CardContent className={classes.content}>
         <PerfectScrollbar>
           <div className={classes.inner}>
-
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Código</TableCell>
+                  <TableCell>Descrição</TableCell>
+                  <TableCell>Categoria</TableCell>
+                  <TableCell>Status</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                <Typography>abc</Typography>
+              </TableBody>
+            </Table>
           </div>
         </PerfectScrollbar>
       </CardContent>
@@ -47,7 +54,7 @@ const Results = ({ className, users, ...rest }) => {
 
 Results.propTypes = {
   className: PropTypes.string,
-  customers: PropTypes.array.isRequired
+  tarefas: PropTypes.array.isRequired
 };
 
 export default Results;
