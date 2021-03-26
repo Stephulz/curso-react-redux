@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {
@@ -31,6 +31,12 @@ const TopBar = ({
 }) => {
   const classes = useStyles();
   const [notifications] = useState([]);
+  const navigate = useNavigate();
+
+  const logout = () => {
+    localStorage.removeItem('email_usuario_logado');
+    navigate('/login');
+  };
 
   return (
     <AppBar
@@ -39,9 +45,9 @@ const TopBar = ({
       {...rest}
     >
       <Toolbar>
-        <RouterLink to="/">
+        <Link to="/">
           <Logo />
-        </RouterLink>
+        </Link>
         <Box flexGrow={1} />
         <Hidden mdDown>
           <IconButton color="inherit">
@@ -53,7 +59,7 @@ const TopBar = ({
               <NotificationsIcon />
             </Badge>
           </IconButton>
-          <IconButton color="inherit">
+          <IconButton color="inherit" onClick={logout}>
             <InputIcon />
           </IconButton>
         </Hidden>
@@ -72,7 +78,8 @@ const TopBar = ({
 
 TopBar.propTypes = {
   className: PropTypes.string,
-  onMobileNavOpen: PropTypes.func
+  onMobileNavOpen: PropTypes.func,
+  history: PropTypes.func
 };
 
 export default TopBar;

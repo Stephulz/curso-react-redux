@@ -25,14 +25,20 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Toolbar = ({ className, ...rest }) => {
+const Toolbar = ({ className, salvar, ...rest }) => {
   const classes = useStyles();
   const [descricao, setDescricao] = useState('');
   const [categoria, setCategoria] = useState('');
 
   const submit = (event) => {
     event.preventDefault();
-    console.log(`Valores: descrição - ${descricao}, categoria - ${categoria}`);
+    const tarefa = {
+      descricao,
+      categoria
+    };
+    salvar(tarefa);
+    setDescricao('');
+    setCategoria('');
   };
 
   return (
@@ -76,7 +82,8 @@ const Toolbar = ({ className, ...rest }) => {
 };
 
 Toolbar.propTypes = {
-  className: PropTypes.string
+  className: PropTypes.string,
+  salvar: PropTypes.func
 };
 
 export default Toolbar;

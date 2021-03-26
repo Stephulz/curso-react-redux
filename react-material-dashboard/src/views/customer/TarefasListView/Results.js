@@ -11,8 +11,13 @@ import {
   TableHead,
   TableRow,
   Typography,
+  IconButton,
   makeStyles
 } from '@material-ui/core';
+
+import TimerIcon from '@material-ui/icons/Timer';
+import DoneAllIcon from '@material-ui/icons/DoneAll';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -21,9 +26,12 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Results = ({ className, tarefas, ...rest }) => {
+const Results = (
+  {
+    className, tarefas, alterarStatus, deletar, ...rest
+  }
+) => {
   const classes = useStyles();
-
   return (
     <Card
       {...rest}
@@ -39,10 +47,37 @@ const Results = ({ className, tarefas, ...rest }) => {
                   <TableCell>Descrição</TableCell>
                   <TableCell>Categoria</TableCell>
                   <TableCell>Status</TableCell>
+                  <TableCell>&nbsp;</TableCell>
+                  <TableCell>&nbsp;</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                <Typography>abc</Typography>
+                {tarefas.map((tarefa) => (
+                  <TableRow key={tarefa.id}>
+                    <TableCell>
+                      <Typography>{tarefa.id}</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography>{tarefa.descricao}</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography>{tarefa.categoria}</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography>{tarefa.done ? 'Feito' : 'Pendente'}</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <IconButton onClick={() => alterarStatus(tarefa.id)} color="secondary">
+                        {tarefa.done ? (<DoneAllIcon />) : (<TimerIcon />)}
+                      </IconButton>
+                    </TableCell>
+                    <TableCell>
+                      <IconButton onClick={() => deletar(tarefa.id)} color="secondary">
+                        <DeleteIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           </div>
@@ -54,7 +89,9 @@ const Results = ({ className, tarefas, ...rest }) => {
 
 Results.propTypes = {
   className: PropTypes.string,
-  tarefas: PropTypes.array.isRequired
+  tarefas: PropTypes.array.isRequired,
+  alterarStatus: PropTypes.func,
+  deletar: PropTypes.func
 };
 
 export default Results;

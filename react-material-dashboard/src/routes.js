@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import DashboardLayout from 'src/layouts/DashboardLayout';
 import MainLayout from 'src/layouts/MainLayout';
 import TarefasListView from 'src/views/customer/TarefasListView';
@@ -14,7 +14,7 @@ const routes = [
     children: [
       { path: 'tarefas', element: <TarefasListView /> },
       { path: 'dashboard', element: <DashboardView /> },
-      { path: '*', element: <Navigate to="/404" /> }
+      { path: '*', element: <Link to="/404" /> }
     ]
   },
   {
@@ -23,8 +23,8 @@ const routes = [
     children: [
       { path: 'login', element: <LoginView /> },
       { path: '404', element: <NotFoundView /> },
-      { path: '/', element: <Navigate to="/app/dashboard" /> },
-      { path: '*', element: <Navigate to="/404" /> }
+      { path: '/', element: <Link to="/app/dashboard" /> },
+      { path: '*', element: <Link to="/404" /> }
     ]
   }
 ];
