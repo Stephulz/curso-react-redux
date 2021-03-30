@@ -1,23 +1,29 @@
-import React, { useEffect, useState } from 'react';
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable react/prop-types */
+import React, { useEffect } from 'react';
 import {
   Box,
-  Container,
   Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
+  Container,
   makeStyles,
-  Typography
+  Typography,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions
 } from '@material-ui/core';
 
-import axios from 'axios';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+
 import Page from 'src/components/Page';
+import {
+  listar,
+  salvar, deletar,
+  alterarStatus
+} from '../../../store/tarefasReducer';
 import Results from './Results';
 import Toolbar from './Toolbar';
-
-const API_URL = 'https://minhastarefas-api.herokuapp.com/tarefas';
-let headers;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,82 +34,11 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const TarefasListView = () => {
+const TarefasListView = (props) => {
   const classes = useStyles();
-  const [tarefas, setTarefas] = useState([]);
-  const [openDialog, setOpenDialog] = useState(false);
-  const [mensagem, setMensagem] = useState('');
-
-  const listarTarefas = () => {
-    axios.get(API_URL, {
-      headers
-    }).then((res) => {
-      const listaDeTarefas = res.data;
-      setTarefas(listaDeTarefas);
-      console.log(listaDeTarefas);
-    }).catch((err) => {
-      setMensagem('Ocorreu um erro', err);
-      setOpenDialog(true);
-      console.log(err);
-    });
-  };
-
-  const salvar = (tarefa) => {
-    axios.post(API_URL, tarefa, {
-      headers
-    }).then((res) => {
-      const novaTarefa = res.data;
-      setTarefas([...tarefas, novaTarefa]);
-      setMensagem('Item adicionado com sucesso');
-      setOpenDialog(true);
-      console.log(res.data);
-    }).catch((err) => {
-      setMensagem('Ocorreu um erro', err);
-      setOpenDialog(true);
-      console.log(err);
-    });
-  };
-
-  const alterarStatus = (id) => {
-    axios.patch(`${API_URL}/${id}`, null, {
-      headers
-    }).then((response) => {
-      const lista = [...tarefas];
-      lista.forEach((tarefa) => {
-        if (tarefa.id === id) {
-          tarefa.done = true;
-        }
-      });
-      setTarefas(lista);
-      setMensagem('Item atualizado com sucesso');
-      setOpenDialog(true);
-      console.log(response);
-    }).catch((err) => {
-      setMensagem('Ocorreu um erro', err);
-      setOpenDialog(true);
-      console.log(err);
-    });
-  };
-
-  const deletar = (id) => {
-    axios.delete(`${API_URL}/${id}`, {
-      headers
-    }).then((response) => {
-      const lista = tarefas.filter((tarefa) => tarefa.id !== id);
-      setTarefas(lista);
-      setMensagem('Item removido com sucesso');
-      setOpenDialog(true);
-      console.log(response);
-    }).catch((err) => {
-      setMensagem('Ocorreu um erro', err);
-      setOpenDialog(true);
-      console.log(err);
-    });
-  };
 
   useEffect(() => {
-    headers = { 'x-tenant-id': localStorage.getItem('email_usuario_logado') };
-    listarTarefas();
+    props.listar();
   }, []);
 
   return (
@@ -112,22 +47,37 @@ const TarefasListView = () => {
       title="Customers"
     >
       <Container maxWidth={false}>
-        <Toolbar salvar={salvar} />
+        <Toolbar salvar={props.salvar} />
         <Box mt={3}>
-          <Results tarefas={tarefas} alterarStatus={alterarStatus} deletar={deletar} />
+          <Results
+            tarefas={props.tarefas}
+            alterarStatus={props.alterarStatus}
+            deletar={props.deletar}
+          />
         </Box>
       </Container>
-      <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+      <Dialog open={props.openDialog} onClose={props.setOpenDialog(false)}>
         <DialogTitle>Atenção</DialogTitle>
         <DialogContent>
-          <Typography>{mensagem}</Typography>
+          <Typography>{props.mensagem}</Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenDialog(false)}>Fechar</Button>
+          <Button onClick={props.setOpenDialog(false)}>Fechar</Button>
         </DialogActions>
       </Dialog>
     </Page>
   );
 };
 
-export default TarefasListView;
+const mapStateToProps = (state) => ({
+  tarefas: state.tarefaReducer.tarefas
+});
+
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  listar,
+  salvar,
+  deletar,
+  alterarStatus
+}, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(TarefasListView);

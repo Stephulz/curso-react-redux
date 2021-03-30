@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
@@ -17,12 +17,6 @@ import {
 } from 'react-feather';
 import FormatListBulletedIcon from '@material-ui/icons/FormatListBulleted';
 import NavItem from './NavItem';
-
-const user = {
-  avatar: '/static/images/avatars/avatar_6.png',
-  jobTitle: 'Senior Developer',
-  name: 'Katarina Smith'
-};
 
 const items = [
   {
@@ -61,6 +55,11 @@ const useStyles = makeStyles(() => ({
 const NavBar = ({ onMobileClose, openMobile }) => {
   const classes = useStyles();
   const location = useLocation();
+  const [user] = useState({
+    avatar: '/static/images/avatars/avatar_6.png',
+    jobTitle: 'Desenvolvedor',
+    name: localStorage.getItem('email_usuario_logado')
+  });
 
   useEffect(() => {
     if (openMobile && onMobileClose) {
