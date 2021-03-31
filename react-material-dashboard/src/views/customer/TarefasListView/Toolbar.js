@@ -47,9 +47,9 @@ const Toolbar = ({ className, salvar, ...rest }) => {
       {...rest}
     >
       <Box mt={3}>
-        <Card>
+        <Card style={{ display: 'relative' }}>
           <CardContent>
-            <Grid container>
+            <Grid container spacing={4}>
               <Grid item md={4}>
                 <TextField
                   fullWidth
@@ -61,7 +61,7 @@ const Toolbar = ({ className, salvar, ...rest }) => {
               </Grid>
               <Grid item md={4}>
                 <FormControl fullWidth>
-                  <InputLabel>Categoria </InputLabel>
+                  <InputLabel>Categoria</InputLabel>
                   <Select value={categoria} onChange={(e) => setCategoria(e.target.value)}>
                     <MenuItem value="">Selecione...</MenuItem>
                     <MenuItem value="TRABALHO">Trabalho</MenuItem>

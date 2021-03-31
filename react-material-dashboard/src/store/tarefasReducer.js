@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { mostrarMensagem } from './dialogReducer';
 
 const http = axios.create({
   baseURL: 'https://minhastarefas-api.herokuapp.com'
@@ -12,17 +13,32 @@ const ACTIONS = {
 };
 
 const ESTADO_INICIAL = {
-  tarefas: []
+  tarefas: [],
+  quantidade: 0
 };
 
 const tarefaReducer = (state = ESTADO_INICIAL, action) => {
   switch (action.type) {
     case ACTIONS.LISTAR:
-      return { ...state, tarefas: action.tarefas };
-    case ACTIONS.ADD:
-      return { ...state, tarefas: [...state.tarefas, action.tarefa] };
+      return {
+        ...state,
+        tarefas: action.tarefas,
+        quantidade: action.tarefas.length
+      };
+    case ACTIONS.ADD: {
+      const lista = [...state.tarefas, action.tarefa];
+      return {
+        ...state,
+        tarefas: lista,
+        quantidade: lista.length
+      };
+    }
     case ACTIONS.REMOVER:
-      return { ...state, tarefas: state.tarefas.filter((tarefa) => tarefa.id !== action.id) };
+      return {
+        ...state,
+        tarefas: state.tarefas.filter((tarefa) => tarefa.id !== action.id),
+        quantidade: state.tarefas.length
+      };
     case ACTIONS.ALTERAR_STATUS: {
       const lista = [...state.tarefas];
       lista.forEach((tarefa) => {
@@ -57,10 +73,15 @@ export function salvar(tarefa) {
     http.post('/tarefas', tarefa, {
       headers: { 'x-tenant-id': localStorage.getItem('email_usuario_logado') }
     }).then((res) => {
-      dispatch({
-        type: ACTIONS.ADD,
-        tarefa: res.data
-      });
+      dispatch(
+        [
+          {
+            type: ACTIONS.ADD,
+            tarefa: res.data
+          },
+          mostrarMensagem('Atenção', 'Tarefa salva com sucesso!')
+        ]
+      );
     });
   };
 }
@@ -71,10 +92,15 @@ export function deletar(id) {
       headers: { 'x-tenant-id': localStorage.getItem('email_usuario_logado') }
     }).then((res) => {
       console.log(res);
-      dispatch({
-        type: ACTIONS.REMOVER,
-        id
-      });
+      dispatch(
+        [
+          {
+            type: ACTIONS.REMOVER,
+            id
+          },
+          mostrarMensagem('Atenção', 'Tarefa removida com sucesso!')
+        ]
+      );
     });
   };
 }
@@ -85,10 +111,15 @@ export function alterarStatus(id) {
       headers: { 'x-tenant-id': localStorage.getItem('email_usuario_logado') }
     }).then((res) => {
       console.log(res);
-      dispatch({
-        type: ACTIONS.ALTERAR_STATUS,
-        id
-      });
+      dispatch(
+        [
+          {
+            type: ACTIONS.ALTERAR_STATUS,
+            id
+          },
+          mostrarMensagem('Atenção', 'Tarefa alterada com sucesso!')
+        ]
+      );
     });
   };
 }

@@ -3,25 +3,25 @@
 import React, { useEffect } from 'react';
 import {
   Box,
-  Button,
   Container,
   makeStyles,
-  Typography,
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogActions
+  DialogActions,
+  Typography,
+  Button
 } from '@material-ui/core';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-
 import Page from 'src/components/Page';
 import {
   listar,
   salvar, deletar,
   alterarStatus
 } from '../../../store/tarefasReducer';
+import { esconderMensagem } from '../../../store/dialogReducer';
 import Results from './Results';
 import Toolbar from './Toolbar';
 
@@ -56,13 +56,13 @@ const TarefasListView = (props) => {
           />
         </Box>
       </Container>
-      <Dialog open={props.openDialog} onClose={props.setOpenDialog(false)}>
-        <DialogTitle>Atenção</DialogTitle>
+      <Dialog open={props.openDialog} onClose={props.esconderMensagem}>
+        <DialogTitle>{props.titulo}</DialogTitle>
         <DialogContent>
           <Typography>{props.mensagem}</Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={props.setOpenDialog(false)}>Fechar</Button>
+          <Button onClick={props.esconderMensagem}>Fechar</Button>
         </DialogActions>
       </Dialog>
     </Page>
@@ -70,14 +70,18 @@ const TarefasListView = (props) => {
 };
 
 const mapStateToProps = (state) => ({
-  tarefas: state.tarefaReducer.tarefas
+  tarefas: state.tarefaReducer.tarefas,
+  titulo: state.dialogReducer.titulo,
+  mensagem: state.dialogReducer.mensagem,
+  openDialog: state.dialogReducer.mostrarMensagem
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   listar,
   salvar,
   deletar,
-  alterarStatus
+  alterarStatus,
+  esconderMensagem
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(TarefasListView);
