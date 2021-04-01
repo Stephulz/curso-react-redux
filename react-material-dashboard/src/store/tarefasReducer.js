@@ -2,7 +2,7 @@ import axios from 'axios';
 import { mostrarMensagem } from './dialogReducer';
 
 const http = axios.create({
-  baseURL: 'https://minhastarefas-api.herokuapp.com'
+  baseURL: process.env.REACT_APP_API_BASE_URL
 });
 
 const ACTIONS = {
@@ -33,12 +33,15 @@ const tarefaReducer = (state = ESTADO_INICIAL, action) => {
         quantidade: lista.length
       };
     }
-    case ACTIONS.REMOVER:
+    case ACTIONS.REMOVER: {
+      const lista = state.tarefas.filter((tarefa) => tarefa.id !== action.id);
       return {
         ...state,
-        tarefas: state.tarefas.filter((tarefa) => tarefa.id !== action.id),
-        quantidade: state.tarefas.length
+        tarefas: lista,
+        quantidade: lista.length
       };
+    }
+
     case ACTIONS.ALTERAR_STATUS: {
       const lista = [...state.tarefas];
       lista.forEach((tarefa) => {

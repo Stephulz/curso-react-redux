@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable react/prop-types */
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
-import PropTypes from 'prop-types';
 import {
   AppBar,
   Badge,
@@ -15,6 +16,8 @@ import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
 import InputIcon from '@material-ui/icons/Input';
 import Logo from 'src/components/Logo';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
 
 const useStyles = makeStyles(() => ({
   root: {},
@@ -24,13 +27,8 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const TopBar = ({
-  className,
-  onMobileNavOpen,
-  ...rest
-}) => {
+const TopBar = (props) => {
   const classes = useStyles();
-  const [notifications] = useState([]);
   const navigate = useNavigate();
 
   const logout = () => {
@@ -40,9 +38,9 @@ const TopBar = ({
 
   return (
     <AppBar
-      className={clsx(classes.root, className)}
+      className={clsx(classes.root, props.className)}
       elevation={0}
-      {...rest}
+      {...props.rest}
     >
       <Toolbar>
         <Link to="/">
@@ -52,9 +50,8 @@ const TopBar = ({
         <Hidden mdDown>
           <IconButton color="inherit">
             <Badge
-              badgeContent={notifications.length}
-              color="primary"
-              variant="dot"
+              badgeContent={props.notificacoes}
+              color="secondary"
             >
               <NotificationsIcon />
             </Badge>
@@ -66,7 +63,7 @@ const TopBar = ({
         <Hidden lgUp>
           <IconButton
             color="inherit"
-            onClick={onMobileNavOpen}
+            onClick={props.onMobileNavOpen}
           >
             <MenuIcon />
           </IconButton>
@@ -76,10 +73,8 @@ const TopBar = ({
   );
 };
 
-TopBar.propTypes = {
-  className: PropTypes.string,
-  onMobileNavOpen: PropTypes.func,
-  history: PropTypes.func
-};
+const mapStateToProps = (state) => ({
+  notificacoes: state.tarefaReducer.quantidade
+});
 
-export default TopBar;
+export default compose(connect(mapStateToProps))(TopBar);

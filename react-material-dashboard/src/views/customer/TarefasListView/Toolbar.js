@@ -47,9 +47,17 @@ const Toolbar = ({ className, salvar, ...rest }) => {
       {...rest}
     >
       <Box mt={3}>
-        <Card style={{ display: 'relative' }}>
+        <Card>
           <CardContent>
-            <Grid container spacing={4}>
+            <Grid
+              container
+              spacing={4}
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexWrap: 'wrap'
+              }}
+            >
               <Grid item md={4}>
                 <TextField
                   fullWidth
@@ -62,7 +70,11 @@ const Toolbar = ({ className, salvar, ...rest }) => {
               <Grid item md={4}>
                 <FormControl fullWidth>
                   <InputLabel>Categoria</InputLabel>
-                  <Select value={categoria} onChange={(e) => setCategoria(e.target.value)}>
+                  <Select
+                    style={{ minWidth: 182 }}
+                    value={categoria}
+                    onChange={(e) => setCategoria(e.target.value)}
+                  >
                     <MenuItem value="">Selecione...</MenuItem>
                     <MenuItem value="TRABALHO">Trabalho</MenuItem>
                     <MenuItem value="ESTUDOS">Estudos</MenuItem>
